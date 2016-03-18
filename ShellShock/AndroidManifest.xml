@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shellshock"
+    package="edu.whu.shellshock"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
-            android:name=".MainActivity"
+            android:name="edu.whu.shellshock.MainActivity"
             android:screenOrientation="landscape"
             android:label="@string/app_name" >
             <intent-filter>
@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- Provider for database -->
+        <provider 
+            android:name="edu.whu.shellshock.UserProvider"
+            android:authorities="shellshock.user">
+        </provider>
     </application>
 
 </manifest>
