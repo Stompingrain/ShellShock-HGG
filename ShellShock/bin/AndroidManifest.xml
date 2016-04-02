@@ -22,6 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name="edu.whu.shellshock.MenuActivity"
+            android:screenOrientation="landscape"></activity>
         
         <!-- Provider for database -->
         <provider 

@@ -1,6 +1,7 @@
 package edu.whu.shellshock;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,11 +23,11 @@ public class UserProvider extends ContentProvider{
 	private static final int DATABASE_VERSION = 1;
 	private static final String TABLE_NAME = "user";
 	
-	private static final String V0L_ID = "id";
+	private static final String VOL_ID = "id";
 	private static final String VOL_NAME = "name";
 	private static final String VOL_EMAIL = "email";
 	private static final String VOL_PASSWORD = "password";
-	private static final String VOL_LEVEV = "level";
+	private static final String VOL_LEVEVL = "level";
 	private static final String VOL_EXP = "exp";
 	
 	private DatabaseHelper mDatabaseHelper;
@@ -103,8 +104,37 @@ public class UserProvider extends ContentProvider{
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);
 			onCreate(db);
-		}
-		
+		}		
 	}
 	
+	public static UserInfo getUserFromName(Context context, String username){
+		UserInfo user = null;
+		Cursor cursor = context.getContentResolver().query(
+				CONTENT_URI, 
+				new String[] {VOL_ID + "as _id" + VOL_NAME,
+				VOL_PASSWORD, VOL_LEVEVL, VOL_EXP, VOL_EMAIL},
+				"NAME=?", new String[] { username }, null);
+		if(cursor != null){
+			if(cursor.moveToFirst()){
+				user = new UserInfo();
+				user.setId(cursor.getInt(cursor.getColumnIndex(VOL_ID)));
+				user.setEmail(cursor.getString(cursor.getColumnIndex(VOL_EMAIL)));
+				user.setName(cursor.getString(cursor.getColumnIndex(TABLE_NAME)));
+				user.setPassword(cursor.getString(cursor.getColumnIndex(VOL_PASSWORD)));
+				user.setLevel(cursor.getInt(cursor.getColumnIndex(VOL_LEVEVL)));
+				user.setExp(cursor.getInt(cursor.getColumnIndex(VOL_EXP)));			
+			}
+			cursor.close();
+		}
+		return user;
+	}
+	public static void addUser(Context context, String username, String password, String email){
+		ContentResolver cr = context.getContentResolver();
+		ContentValues values = new ContentValues();
+		values.put(TABLE_NAME, username);
+		values.put(VOL_EMAIL, email);
+		values.put(VOL_PASSWORD, password);
+		cr.insert(CONTENT_URI, values);
+		return;
+	}
 }
